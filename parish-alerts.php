@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Parish Alerts
  * Description: Publishes scheduled parish alerts and displays them in a sitewide popover when active.
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: Andrew T. Schmitt
  * License: GPL-3.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PARISH_ALERTS_VERSION', '0.1.0' );
+define( 'PARISH_ALERTS_VERSION', '0.2.0' );
 define( 'PARISH_ALERTS_FILE', __FILE__ );
 define( 'PARISH_ALERTS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PARISH_ALERTS_URL', plugin_dir_url( __FILE__ ) );

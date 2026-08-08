@@ -1,6 +1,7 @@
 .parish-alerts {
 	--parish-alert-accent: var(--wp--preset--color--sanctuary-burgundy, #7a2038);
 	--parish-alert-text: var(--wp--preset--color--black, #28251f);
+	--parish-alert-muted: #625e57;
 	--parish-alert-surface: var(--wp--preset--color--white, #fff);
 	position: fixed;
 	right: max(1rem, env(safe-area-inset-right));
@@ -11,6 +12,15 @@
 	align-items: flex-end;
 	gap: 0.75rem;
 	font-family: var(--wp--preset--font-family--system-font, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+}
+
+.parish-alerts__trigger,
+.parish-alerts__ack,
+.parish-alerts__mark-all,
+.parish-alerts-modal__primary,
+.parish-alerts-modal__secondary {
+	font: inherit;
+	cursor: pointer;
 }
 
 .parish-alerts__trigger {
@@ -24,9 +34,7 @@
 	background: var(--parish-alert-accent);
 	box-shadow: 0 0.45rem 1.4rem rgb(0 0 0 / 25%);
 	color: #fff;
-	font: inherit;
 	font-weight: 700;
-	cursor: pointer;
 }
 
 .parish-alerts__trigger:hover,
@@ -37,7 +45,8 @@
 
 .parish-alerts__trigger:focus-visible,
 .parish-alerts__close:focus-visible,
-.parish-alerts a:focus-visible {
+.parish-alerts a:focus-visible,
+.parish-alerts button:focus-visible {
 	outline: 3px solid #f0b429;
 	outline-offset: 3px;
 }
@@ -61,9 +70,17 @@
 	line-height: 1;
 }
 
+.parish-alerts__count[hidden],
+.parish-alerts__panel[hidden],
+.parish-alerts-modal[hidden],
+.parish-alerts__mark-all[hidden],
+.parish-alerts__item[hidden] {
+	display: none;
+}
+
 .parish-alerts__panel {
-	width: min(24rem, calc(100vw - 2rem));
-	max-height: min(34rem, calc(100vh - 6rem));
+	width: min(25rem, calc(100vw - 2rem));
+	max-height: min(36rem, calc(100vh - 6rem));
 	overflow-y: auto;
 	border: 1px solid rgb(0 0 0 / 12%);
 	border-radius: 0.9rem;
@@ -72,23 +89,30 @@
 	color: var(--parish-alert-text);
 }
 
-.parish-alerts__panel[hidden] {
-	display: none;
-}
-
-.parish-alerts__panel-header {
+.parish-alerts__panel-header,
+.parish-alerts-modal__header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
+}
+
+.parish-alerts__panel-header {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 	padding: 1rem 1rem 0.8rem;
 	border-bottom: 1px solid rgb(0 0 0 / 10%);
+	background: var(--parish-alert-surface);
 }
 
 .parish-alerts__heading,
 .parish-alerts__item-title,
 .parish-alerts__level,
-.parish-alerts__summary p {
+.parish-alerts__summary p,
+.parish-alerts-modal__eyebrow,
+.parish-alerts-modal__heading,
+.parish-alerts-modal__description {
 	margin: 0;
 }
 
@@ -99,6 +123,7 @@
 .parish-alerts__close {
 	display: grid;
 	place-items: center;
+	flex: 0 0 auto;
 	width: 2rem;
 	height: 2rem;
 	padding: 0;
@@ -113,6 +138,7 @@
 }
 
 .parish-alerts__item {
+	position: relative;
 	padding: 1rem;
 	border-left: 0.3rem solid #497592;
 }
@@ -129,9 +155,24 @@
 	border-left-color: #b42318;
 }
 
+.parish-alerts__item.is-unread::after {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	width: 0.55rem;
+	height: 0.55rem;
+	border-radius: 50%;
+	background: var(--parish-alert-accent);
+	content: "";
+}
+
+.parish-alerts__item.is-read {
+	background: rgb(0 0 0 / 2.5%);
+}
+
 .parish-alerts__level {
 	margin-bottom: 0.25rem;
-	color: #5a564f;
+	color: var(--parish-alert-muted);
 	font-size: 0.72rem;
 	font-weight: 800;
 	letter-spacing: 0.08em;
@@ -139,6 +180,7 @@
 }
 
 .parish-alerts__item-title {
+	padding-right: 1rem;
 	font-size: 1.05rem;
 	line-height: 1.35;
 }
@@ -155,14 +197,150 @@
 	line-height: 1.5;
 }
 
+.parish-alerts__ack {
+	margin-top: 0.75rem;
+	padding: 0.35rem 0.65rem;
+	border: 1px solid var(--parish-alert-accent);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--parish-alert-accent);
+	font-size: 0.78rem;
+	font-weight: 700;
+}
+
+.parish-alerts__ack:disabled {
+	border-color: transparent;
+	color: var(--parish-alert-muted);
+	cursor: default;
+}
+
+.parish-alerts__empty {
+	margin: 0;
+	padding: 1.25rem 1rem;
+	color: var(--parish-alert-muted);
+	line-height: 1.5;
+}
+
+.parish-alerts__panel-actions {
+	position: sticky;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0.65rem;
+	padding: 0.85rem 1rem 1rem;
+	border-top: 1px solid rgb(0 0 0 / 10%);
+	background: var(--parish-alert-surface);
+	text-align: center;
+}
+
+.parish-alerts__mark-all {
+	padding: 0.6rem 0.85rem;
+	border: 0;
+	border-radius: 999px;
+	background: var(--parish-alert-accent);
+	color: #fff;
+	font-weight: 700;
+}
+
 .parish-alerts__all {
-	display: block;
-	padding: 0.9rem 1rem;
-	border-radius: 0 0 0.9rem 0.9rem;
-	background: rgb(122 32 56 / 8%);
 	color: var(--parish-alert-accent);
 	font-weight: 700;
-	text-align: center;
+}
+
+.parish-alerts-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 10000;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+}
+
+.parish-alerts-modal__backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgb(24 20 18 / 70%);
+	backdrop-filter: blur(2px);
+}
+
+.parish-alerts-modal__dialog {
+	position: relative;
+	z-index: 1;
+	width: min(38rem, 100%);
+	max-height: calc(100vh - 2rem);
+	overflow-y: auto;
+	border-radius: 1rem;
+	background: var(--parish-alert-surface);
+	box-shadow: 0 1.25rem 4rem rgb(0 0 0 / 38%);
+	color: var(--parish-alert-text);
+}
+
+.parish-alerts-modal__header {
+	padding: 1.2rem 1.25rem 0.9rem;
+	border-bottom: 1px solid rgb(0 0 0 / 10%);
+}
+
+.parish-alerts-modal__eyebrow {
+	margin-bottom: 0.15rem;
+	color: var(--parish-alert-accent);
+	font-size: 0.75rem;
+	font-weight: 800;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.parish-alerts-modal__heading {
+	font-size: clamp(1.35rem, 4vw, 1.8rem);
+	line-height: 1.2;
+}
+
+.parish-alerts-modal__description {
+	padding: 0.9rem 1.25rem;
+	color: var(--parish-alert-muted);
+	font-size: 0.92rem;
+	line-height: 1.5;
+}
+
+.parish-alerts-modal__items {
+	border-top: 1px solid rgb(0 0 0 / 8%);
+}
+
+.parish-alerts-modal__items .parish-alerts__item {
+	padding: 1rem 1.25rem;
+}
+
+.parish-alerts-modal__actions {
+	position: sticky;
+	bottom: 0;
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.75rem;
+	padding: 1rem 1.25rem;
+	border-top: 1px solid rgb(0 0 0 / 10%);
+	background: var(--parish-alert-surface);
+}
+
+.parish-alerts-modal__primary,
+.parish-alerts-modal__secondary {
+	padding: 0.65rem 1rem;
+	border-radius: 999px;
+	font-weight: 700;
+}
+
+.parish-alerts-modal__primary {
+	border: 1px solid var(--parish-alert-accent);
+	background: var(--parish-alert-accent);
+	color: #fff;
+}
+
+.parish-alerts-modal__secondary {
+	border: 1px solid rgb(0 0 0 / 22%);
+	background: transparent;
+	color: var(--parish-alert-text);
+}
+
+body.parish-alerts-modal-open {
+	overflow: hidden;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -178,6 +356,15 @@
 	}
 
 	.parish-alerts__panel {
+		width: 100%;
+	}
+
+	.parish-alerts-modal__actions {
+		flex-direction: column-reverse;
+	}
+
+	.parish-alerts-modal__primary,
+	.parish-alerts-modal__secondary {
 		width: 100%;
 	}
 }
