@@ -42,6 +42,9 @@ function parish_alerts_render_schedule_meta_box( $post ) {
 	$start = absint( get_post_meta( $post->ID, '_parish_alert_start', true ) );
 	$end   = absint( get_post_meta( $post->ID, '_parish_alert_end', true ) );
 	$level = parish_alerts_sanitize_level( get_post_meta( $post->ID, '_parish_alert_level', true ) );
+	$push  = metadata_exists( 'post', $post->ID, '_parish_alert_push_requested' )
+		? (bool) get_post_meta( $post->ID, '_parish_alert_push_requested', true )
+		: in_array( $post->post_status, array( 'auto-draft', 'draft' ), true );
 
 	wp_nonce_field( 'parish_alerts_save_schedule', 'parish_alerts_schedule_nonce' );
 	?>
@@ -65,6 +68,17 @@ function parish_alerts_render_schedule_meta_box( $post ) {
 	</p>
 	<p class="description">
 		<?php esc_html_e( 'An alert is active only while it is published and within this optional time window.', 'parish-alerts' ); ?>
+	</p>
+	<hr>
+	<input type="hidden" name="parish_alert_push_control" value="1">
+	<p>
+		<label>
+			<input type="checkbox" name="parish_alert_push_requested" value="1" <?php checked( $push ); ?>>
+			<strong><?php esc_html_e( 'Send browser notification', 'parish-alerts' ); ?></strong>
+		</label>
+	</p>
+	<p class="description">
+		<?php esc_html_e( 'Available for Important and Emergency alerts. New alerts default to send; after delivery, edits require selecting this again. Future alerts send at their start time.', 'parish-alerts' ); ?>
 	</p>
 	<?php
 }
@@ -107,6 +121,28 @@ function parish_alerts_save_schedule( $post_id ) {
 	update_post_meta( $post_id, '_parish_alert_start', $start );
 	update_post_meta( $post_id, '_parish_alert_end', $end );
 	update_post_meta( $post_id, '_parish_alert_level', $level );
+
+	if ( isset( $_POST['parish_alert_push_control'] ) ) {
+		$push_requested = isset( $_POST['parish_alert_push_requested'] ) && in_array( $level, array( 'important', 'emergency' ), true );
+		update_post_meta( $post_id, '_parish_alert_push_requested', $push_requested ? 1 : 0 );
+	}
+
+	parish_alerts_reschedule_push_for_alert( $post_id );
+}
+
+/**
+ * Keeps delivery events aligned when an alert changes publication state.
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Previous post status.
+ * @param WP_Post $post Alert post.
+ */
+function parish_alerts_sync_push_on_status_change( $new_status, $old_status, $post ) {
+	if ( 'parish_alert' !== $post->post_type || $new_status === $old_status ) {
+		return;
+	}
+
+	parish_alerts_reschedule_push_for_alert( $post->ID );
 }
 
 /**
@@ -148,5 +184,6 @@ function parish_alerts_render_admin_column( $column, $post_id ) {
 
 add_action( 'add_meta_boxes_parish_alert', 'parish_alerts_add_meta_boxes' );
 add_action( 'save_post_parish_alert', 'parish_alerts_save_schedule' );
+add_action( 'transition_post_status', 'parish_alerts_sync_push_on_status_change', 10, 3 );
 add_filter( 'manage_parish_alert_posts_columns', 'parish_alerts_admin_columns' );
 add_action( 'manage_parish_alert_posts_custom_column', 'parish_alerts_render_admin_column', 10, 2 );

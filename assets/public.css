@@ -17,6 +17,7 @@
 .parish-alerts__trigger,
 .parish-alerts__ack,
 .parish-alerts__mark-all,
+.parish-alerts__push-toggle,
 .parish-alerts-modal__primary,
 .parish-alerts-modal__secondary {
 	font: inherit;
@@ -74,6 +75,7 @@
 .parish-alerts__panel[hidden],
 .parish-alerts-modal[hidden],
 .parish-alerts__mark-all[hidden],
+.parish-alerts__push-toggle[hidden],
 .parish-alerts__item[hidden] {
 	display: none;
 }
@@ -245,6 +247,37 @@
 .parish-alerts__all {
 	color: var(--parish-alert-accent);
 	font-weight: 700;
+}
+
+.parish-alerts__push {
+	display: grid;
+	gap: 0.35rem;
+	padding-top: 0.65rem;
+	border-top: 1px solid rgb(0 0 0 / 10%);
+}
+
+.parish-alerts__push-toggle {
+	justify-self: center;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--parish-alert-accent);
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.15em;
+}
+
+.parish-alerts__push-toggle:disabled {
+	color: var(--parish-alert-muted);
+	cursor: default;
+}
+
+.parish-alerts__push-status {
+	margin: 0;
+	color: var(--parish-alert-muted);
+	font-size: 0.78rem;
+	line-height: 1.4;
 }
 
 .parish-alerts-modal {

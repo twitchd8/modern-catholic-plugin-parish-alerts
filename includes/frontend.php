@@ -197,6 +197,8 @@ function parish_alerts_render_interface() {
 		}
 	);
 	$archive_url     = get_post_type_archive_link( 'parish_alert' );
+	$push_ready      = parish_alerts_push_is_configured();
+	$service_worker  = add_query_arg( 'parish-alerts-service-worker', '1', home_url( '/' ) );
 	?>
 	<div
 		class="parish-alerts"
@@ -207,6 +209,18 @@ function parish_alerts_render_interface() {
 		data-label-button="<?php esc_attr_e( 'Alerts', 'parish-alerts' ); ?>"
 		data-label-new-one="<?php esc_attr_e( '1 new alert', 'parish-alerts' ); ?>"
 		data-label-new-many="<?php esc_attr_e( '%d new alerts', 'parish-alerts' ); ?>"
+		<?php if ( $push_ready ) : ?>
+			data-push-rest-url="<?php echo esc_url( rest_url( 'parish-alerts/v1/subscriptions' ) ); ?>"
+			data-push-service-worker-url="<?php echo esc_url( $service_worker ); ?>"
+			data-push-service-worker-scope="<?php echo esc_attr( parish_alerts_service_worker_scope() ); ?>"
+			data-push-vapid-key="<?php echo esc_attr( get_option( 'parish_alerts_vapid_public_key' ) ); ?>"
+			data-label-push-enable="<?php esc_attr_e( 'Enable browser notifications', 'parish-alerts' ); ?>"
+			data-label-push-disable="<?php esc_attr_e( 'Disable browser notifications', 'parish-alerts' ); ?>"
+			data-label-push-enabled="<?php esc_attr_e( 'Browser notifications are enabled.', 'parish-alerts' ); ?>"
+			data-label-push-disabled="<?php esc_attr_e( 'Browser notifications are off.', 'parish-alerts' ); ?>"
+			data-label-push-blocked="<?php esc_attr_e( 'Notifications are blocked in this browser.', 'parish-alerts' ); ?>"
+			data-label-push-error="<?php esc_attr_e( 'Notification settings could not be updated. Please try again.', 'parish-alerts' ); ?>"
+		<?php endif; ?>
 	>
 		<div id="parish-alerts-panel" class="parish-alerts__panel" role="region" aria-labelledby="parish-alerts-heading" hidden>
 			<div class="parish-alerts__panel-header">
@@ -230,6 +244,12 @@ function parish_alerts_render_interface() {
 				<?php endif; ?>
 				<?php if ( $archive_url ) : ?>
 					<a class="parish-alerts__all" href="<?php echo esc_url( $archive_url ); ?>"><?php esc_html_e( 'View all active alerts', 'parish-alerts' ); ?></a>
+				<?php endif; ?>
+				<?php if ( $push_ready ) : ?>
+					<div class="parish-alerts__push">
+						<button class="parish-alerts__push-toggle" type="button" data-alert-push-toggle hidden><?php esc_html_e( 'Enable browser notifications', 'parish-alerts' ); ?></button>
+						<p class="parish-alerts__push-status" data-alert-push-status aria-live="polite"></p>
+					</div>
 				<?php endif; ?>
 			</div>
 		</div>

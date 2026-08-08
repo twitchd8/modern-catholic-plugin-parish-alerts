@@ -18,6 +18,8 @@
 	const modalItems = Array.from( root.querySelectorAll( '[data-alert-modal-item]' ) );
 	const modalAcknowledge = root.querySelector( '[data-alert-modal-ack]' );
 	const modalDismissButtons = Array.from( root.querySelectorAll( '[data-alert-modal-dismiss]' ) );
+	const pushToggle = root.querySelector( '[data-alert-push-toggle]' );
+	const pushStatus = root.querySelector( '[data-alert-push-status]' );
 	let acknowledged = loadAcknowledged();
 	let modalDismissedThisPage = false;
 	let modalPreviousFocus = null;
@@ -42,6 +44,122 @@
 			window.localStorage.setItem( storageKey, JSON.stringify( tokens ) );
 		} catch ( error ) {
 			// Keep acknowledgment state in memory when browser storage is unavailable.
+		}
+	}
+
+	function urlBase64ToUint8Array( value ) {
+		const padding = '='.repeat( ( 4 - value.length % 4 ) % 4 );
+		const base64 = ( value + padding ).replace( /-/g, '+' ).replace( /_/g, '/' );
+		const bytes = window.atob( base64 );
+
+		return Uint8Array.from( bytes, character => character.charCodeAt( 0 ) );
+	}
+
+	async function savePushSubscription( subscription ) {
+		const data = subscription.toJSON();
+		data.contentEncoding = window.PushManager.supportedContentEncodings?.[ 0 ] || 'aes128gcm';
+
+		const response = await window.fetch( root.dataset.pushRestUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify( data ),
+		} );
+
+		if ( ! response.ok ) {
+			throw new Error( 'Subscription could not be saved.' );
+		}
+	}
+
+	async function deletePushSubscription( endpoint ) {
+		const response = await window.fetch( root.dataset.pushRestUrl, {
+			method: 'DELETE',
+			credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify( { endpoint } ),
+		} );
+
+		if ( ! response.ok ) {
+			throw new Error( 'Subscription could not be removed.' );
+		}
+	}
+
+	function showPushState( subscription, message = '' ) {
+		if ( ! pushToggle || ! pushStatus ) {
+			return;
+		}
+
+		pushToggle.hidden = false;
+		pushToggle.disabled = false;
+		pushToggle.dataset.subscribed = subscription ? 'true' : 'false';
+		pushToggle.textContent = subscription ? root.dataset.labelPushDisable : root.dataset.labelPushEnable;
+		pushStatus.textContent = message || ( subscription ? root.dataset.labelPushEnabled : root.dataset.labelPushDisabled );
+	}
+
+	async function initializePushControls() {
+		if ( ! pushToggle || ! pushStatus || ! root.dataset.pushVapidKey || ! root.dataset.pushRestUrl ||
+			! root.dataset.pushServiceWorkerUrl || ! root.dataset.pushServiceWorkerScope || ! window.isSecureContext || !( 'serviceWorker' in navigator ) ||
+			!( 'PushManager' in window ) || !( 'Notification' in window ) ) {
+			return;
+		}
+
+		if ( 'denied' === Notification.permission ) {
+			pushToggle.hidden = false;
+			pushToggle.disabled = true;
+			pushToggle.textContent = root.dataset.labelPushEnable;
+			pushStatus.textContent = root.dataset.labelPushBlocked;
+			return;
+		}
+
+		try {
+			const registration = await navigator.serviceWorker.register(
+				root.dataset.pushServiceWorkerUrl,
+				{ scope: root.dataset.pushServiceWorkerScope }
+			);
+			const subscription = await registration.pushManager.getSubscription();
+			showPushState( subscription );
+
+			pushToggle.addEventListener( 'click', async function () {
+				pushToggle.disabled = true;
+
+				try {
+					const current = await registration.pushManager.getSubscription();
+					if ( current ) {
+						const endpoint = current.endpoint;
+						await current.unsubscribe();
+						await deletePushSubscription( endpoint );
+						showPushState( null );
+						return;
+					}
+
+					const permission = await Notification.requestPermission();
+					if ( 'granted' !== permission ) {
+						pushToggle.disabled = true;
+						pushStatus.textContent = 'denied' === permission ? root.dataset.labelPushBlocked : root.dataset.labelPushDisabled;
+						return;
+					}
+
+					const subscription = await registration.pushManager.subscribe( {
+						userVisibleOnly: true,
+						applicationServerKey: urlBase64ToUint8Array( root.dataset.pushVapidKey ),
+					} );
+
+					try {
+						await savePushSubscription( subscription );
+					} catch ( error ) {
+						await subscription.unsubscribe();
+						throw error;
+					}
+
+					showPushState( subscription );
+				} catch ( error ) {
+					pushToggle.disabled = false;
+					pushStatus.textContent = root.dataset.labelPushError;
+				}
+			} );
+		} catch ( error ) {
+			pushToggle.hidden = true;
+			pushStatus.textContent = '';
 		}
 	}
 
@@ -237,5 +355,6 @@
 	} );
 
 	updateInterface();
+	initializePushControls();
 	window.setTimeout( openModal, 0 );
 }() );
