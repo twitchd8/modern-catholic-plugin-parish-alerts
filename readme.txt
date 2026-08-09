@@ -3,7 +3,7 @@ Contributors: twitchd8
 Tags: alerts, announcements, cancellations, parish
 Requires at least: 6.7
 Requires PHP: 8.2
-Stable tag: 0.3.0
+Stable tag: 1.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,9 @@ When a visitor opts in, the plugin stores that browser's anonymous push endpoint
 3. Add and publish alerts from Alerts in the WordPress dashboard.
 
 == Changelog ==
+
+= 1.0.0 =
+* Promote the tested alert center, acknowledgments, priority modal, scheduling, and opt-in Web Push delivery as the first stable release.
 
 = 0.3.0 =
 * Add explicit per-browser Web Push opt-in controls on secure sites.

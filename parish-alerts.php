@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Parish Alerts
- * Description: Publishes scheduled parish alerts and displays them in a sitewide popover when active.
- * Version: 0.3.0
+ * Description: Publishes scheduled parish alerts with acknowledgments, priority modals, and opt-in browser notifications.
+ * Version: 1.0.0
  * Requires PHP: 8.2
  * Author: Andrew T. Schmitt
  * License: GPL-3.0-or-later
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PARISH_ALERTS_VERSION', '0.3.0' );
+define( 'PARISH_ALERTS_VERSION', '1.0.0' );
 define( 'PARISH_ALERTS_DB_VERSION', '1.0.0' );
 define( 'PARISH_ALERTS_FILE', __FILE__ );
 define( 'PARISH_ALERTS_DIR', plugin_dir_path( __FILE__ ) );
