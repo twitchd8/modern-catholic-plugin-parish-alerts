@@ -49,6 +49,16 @@ function parish_alerts_install_or_upgrade() {
 
 	dbDelta( $sql );
 
+	// Move existing alerts to the Modern Catholic post type key.
+	$wpdb->update(
+		$wpdb->posts,
+		array( 'post_type' => 'mc_alert' ),
+		array( 'post_type' => 'parish_alert' ),
+		array( '%s' ),
+		array( '%s' )
+	);
+	update_option( 'parish_alerts_flush_rewrite', 1, false );
+
 	if ( ! get_option( 'parish_alerts_vapid_public_key' ) || ! get_option( 'parish_alerts_vapid_private_key' ) ) {
 		parish_alerts_generate_vapid_keys();
 	}

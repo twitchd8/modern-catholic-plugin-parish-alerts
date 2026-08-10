@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function parish_alerts_add_notifications_page() {
 	add_submenu_page(
-		'edit.php?post_type=parish_alert',
+		'edit.php?post_type=mc_alert',
 		__( 'Alert Notifications', 'parish-alerts' ),
 		__( 'Notifications', 'parish-alerts' ),
 		'manage_options',

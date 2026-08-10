@@ -37,7 +37,7 @@ function parish_alerts_register_post_type() {
 	);
 
 	register_post_type(
-		'parish_alert',
+		'mc_alert',
 		array(
 			'labels'              => $labels,
 			'public'              => true,
@@ -62,7 +62,7 @@ function parish_alerts_register_post_type() {
 	};
 
 	register_post_meta(
-		'parish_alert',
+		'mc_alert',
 		'_parish_alert_start',
 		array(
 			'type'              => 'integer',
@@ -75,7 +75,7 @@ function parish_alerts_register_post_type() {
 	);
 
 	register_post_meta(
-		'parish_alert',
+		'mc_alert',
 		'_parish_alert_end',
 		array(
 			'type'              => 'integer',
@@ -88,7 +88,7 @@ function parish_alerts_register_post_type() {
 	);
 
 	register_post_meta(
-		'parish_alert',
+		'mc_alert',
 		'_parish_alert_level',
 		array(
 			'type'              => 'string',
@@ -187,7 +187,7 @@ function parish_alerts_active_meta_query( $timestamp = null ) {
 function parish_alerts_get_state( $post, $timestamp = null ) {
 	$post = get_post( $post );
 
-	if ( ! $post || 'parish_alert' !== $post->post_type || 'publish' !== $post->post_status ) {
+	if ( ! $post || 'mc_alert' !== $post->post_type || 'publish' !== $post->post_status ) {
 		return 'inactive';
 	}
 
@@ -213,7 +213,7 @@ function parish_alerts_get_state( $post, $timestamp = null ) {
  * @return array
  */
 function parish_alerts_close_saved_discussion( $data ) {
-	if ( isset( $data['post_type'] ) && 'parish_alert' === $data['post_type'] ) {
+	if ( isset( $data['post_type'] ) && 'mc_alert' === $data['post_type'] ) {
 		$data['comment_status'] = 'closed';
 		$data['ping_status']    = 'closed';
 	}

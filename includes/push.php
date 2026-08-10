@@ -209,7 +209,7 @@ function parish_alerts_send_push_notification( $post_id, $token, $attempt = 0 ) 
 	delete_post_meta( $post_id, '_parish_alert_push_event_args' );
 	delete_post_meta( $post_id, '_parish_alert_push_scheduled_at' );
 
-	if ( ! $alert || 'parish_alert' !== $alert->post_type || 'publish' !== $alert->post_status || $token !== parish_alerts_get_revision_token( $alert ) ) {
+	if ( ! $alert || 'mc_alert' !== $alert->post_type || 'publish' !== $alert->post_status || $token !== parish_alerts_get_revision_token( $alert ) ) {
 		return;
 	}
 
