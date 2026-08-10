@@ -27,7 +27,7 @@ When a visitor opts in, the plugin stores that browser's anonymous push endpoint
 
 == Installation ==
 
-1. Upload the `parish-alerts` folder to `/wp-content/plugins/`.
+1. Upload the `modern-catholic-plugin-parish-alerts` folder to `/wp-content/plugins/`.
 2. Activate Modern Catholic – Parish Alerts.
 3. Add and publish alerts from Alerts in the WordPress dashboard.
 
