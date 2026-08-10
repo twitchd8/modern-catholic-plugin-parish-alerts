@@ -17,7 +17,7 @@ function parish_alerts_add_meta_boxes() {
 		'parish-alert-schedule',
 		__( 'Alert Schedule and Priority', 'parish-alerts' ),
 		'parish_alerts_render_schedule_meta_box',
-		'parish_alert',
+		'mc_alert',
 		'side',
 		'high'
 	);
@@ -138,7 +138,7 @@ function parish_alerts_save_schedule( $post_id ) {
  * @param WP_Post $post Alert post.
  */
 function parish_alerts_sync_push_on_status_change( $new_status, $old_status, $post ) {
-	if ( 'parish_alert' !== $post->post_type || $new_status === $old_status ) {
+	if ( 'mc_alert' !== $post->post_type || $new_status === $old_status ) {
 		return;
 	}
 
@@ -182,8 +182,8 @@ function parish_alerts_render_admin_column( $column, $post_id ) {
 	}
 }
 
-add_action( 'add_meta_boxes_parish_alert', 'parish_alerts_add_meta_boxes' );
-add_action( 'save_post_parish_alert', 'parish_alerts_save_schedule' );
+add_action( 'add_meta_boxes_mc_alert', 'parish_alerts_add_meta_boxes' );
+add_action( 'save_post_mc_alert', 'parish_alerts_save_schedule' );
 add_action( 'transition_post_status', 'parish_alerts_sync_push_on_status_change', 10, 3 );
-add_filter( 'manage_parish_alert_posts_columns', 'parish_alerts_admin_columns' );
-add_action( 'manage_parish_alert_posts_custom_column', 'parish_alerts_render_admin_column', 10, 2 );
+add_filter( 'manage_mc_alert_posts_columns', 'parish_alerts_admin_columns' );
+add_action( 'manage_mc_alert_posts_custom_column', 'parish_alerts_render_admin_column', 10, 2 );

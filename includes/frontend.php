@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param WP_Query $query Main query.
  */
 function parish_alerts_filter_archive( $query ) {
-	if ( is_admin() || ! $query->is_main_query() || ! $query->is_post_type_archive( 'parish_alert' ) ) {
+	if ( is_admin() || ! $query->is_main_query() || ! $query->is_post_type_archive( 'mc_alert' ) ) {
 		return;
 	}
 
@@ -31,7 +31,7 @@ function parish_alerts_filter_archive( $query ) {
  * @return string
  */
 function parish_alerts_archive_title( $title ) {
-	return is_post_type_archive( 'parish_alert' ) ? __( 'Active Alerts', 'parish-alerts' ) : $title;
+	return is_post_type_archive( 'mc_alert' ) ? __( 'Active Alerts', 'parish-alerts' ) : $title;
 }
 
 /**
@@ -61,7 +61,7 @@ function parish_alerts_get_level_label( $level ) {
 function parish_alerts_get_revision_token( $post ) {
 	$post = get_post( $post );
 
-	if ( ! $post || 'parish_alert' !== $post->post_type ) {
+	if ( ! $post || 'mc_alert' !== $post->post_type ) {
 		return '';
 	}
 
@@ -82,7 +82,7 @@ function parish_alerts_get_active_posts() {
 
 	$alerts = get_posts(
 		array(
-			'post_type'      => 'parish_alert',
+			'post_type'      => 'mc_alert',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'date',
@@ -196,7 +196,7 @@ function parish_alerts_render_interface() {
 			return in_array( $level, array( 'important', 'emergency' ), true );
 		}
 	);
-	$archive_url     = get_post_type_archive_link( 'parish_alert' );
+	$archive_url     = get_post_type_archive_link( 'mc_alert' );
 	$push_ready      = parish_alerts_push_is_configured();
 	$service_worker  = add_query_arg( 'parish-alerts-service-worker', '1', home_url( '/' ) );
 	?>
