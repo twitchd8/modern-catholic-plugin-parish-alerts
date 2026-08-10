@@ -2,7 +2,7 @@
   "name": "twitchd8/parish-alerts",
   "description": "Scheduled parish alerts with browser acknowledgments and opt-in Web Push delivery.",
   "type": "wordpress-plugin",
-  "license": "GPL-3.0-or-later",
+  "license": "GPL-3.0-only",
   "require": {
     "php": ">=8.2",
     "guzzlehttp/guzzle": "^7.9",
