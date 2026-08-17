@@ -3,7 +3,7 @@ Contributors: twitchd8
 Tags: alerts, announcements, cancellations, parish
 Requires at least: 6.7
 Requires PHP: 8.2
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,6 +32,9 @@ When a visitor opts in, the plugin stores that browser's anonymous push endpoint
 3. Add and publish alerts from Alerts in the WordPress dashboard.
 
 == Changelog ==
+
+= 1.0.2 =
+* Standardize the GitHub README with Modern Catholic branding, compatibility badges, installation guidance, and GPL-3.0-only licensing.
 
 = 1.0.1 =
 * Standardize the post type key as `mc_alert` and migrate existing Alert posts.
