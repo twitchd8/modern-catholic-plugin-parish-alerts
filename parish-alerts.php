@@ -3,7 +3,7 @@
  * Plugin Name: Modern Catholic – Parish Alerts
  * Plugin URI: https://github.com/twitchd8/modern-catholic-plugin-parish-alerts
  * Description: Publishes scheduled parish alerts for Modern Catholic parish websites with acknowledgments, priority modals, and opt-in browser notifications.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Requires PHP: 8.2
  * Author: Andrew T. Schmitt
  * License: GPL-3.0-only
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'PARISH_ALERTS_VERSION', '1.0.1' );
+define( 'PARISH_ALERTS_VERSION', '1.0.2' );
 define( 'PARISH_ALERTS_DB_VERSION', '1.1.0' );
 define( 'PARISH_ALERTS_FILE', __FILE__ );
 define( 'PARISH_ALERTS_DIR', plugin_dir_path( __FILE__ ) );
