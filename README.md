@@ -45,6 +45,11 @@ Notice alerts never send push notifications. Important and Emergency alerts may 
 
 ## Changelog
 
+### 1.0.3
+
+- Adopt the Modern Catholic semantic color contract for actions, surfaces, text, borders, focus, and alert status roles.
+- Preserve WordPress preset and literal fallbacks when the Modern Catholic theme is unavailable.
+
 ### 1.0.2
 
 - Standardize the GitHub README with Modern Catholic branding, compatibility badges, installation guidance, and GPL-3.0-only licensing.

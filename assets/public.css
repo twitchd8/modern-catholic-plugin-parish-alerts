@@ -1,8 +1,17 @@
 .parish-alerts {
-	--parish-alert-accent: var(--wp--preset--color--sanctuary-burgundy, #7a2038);
-	--parish-alert-text: var(--wp--preset--color--black, #28251f);
-	--parish-alert-muted: #625e57;
-	--parish-alert-surface: var(--wp--preset--color--white, #fff);
+	/* MC/WP/literal fallbacks let this plugin remain usable with or without the theme. */
+	--parish-alert-accent: var(--mc-color-primary, var(--wp--preset--color--primary, #7a2038));
+	--parish-alert-on-accent: var(--mc-color-on-primary, var(--wp--preset--color--on-primary, #fffaf0));
+	--parish-alert-text: var(--mc-color-foreground, var(--wp--preset--color--foreground, #28251f));
+	--parish-alert-muted: var(--mc-color-text-muted, var(--wp--preset--color--text-muted, #655f54));
+	--parish-alert-surface: var(--mc-color-surface, var(--wp--preset--color--surface, #f7f1e2));
+	--parish-alert-border: var(--mc-color-border, var(--wp--preset--color--border-subtle, #b8aa8e));
+	--parish-alert-focus: var(--mc-color-focus, var(--wp--preset--color--accent-700, #72571c));
+	--parish-alert-info: var(--mc-color-info, #2f6f91);
+	--parish-alert-success: var(--mc-color-success, #2f6b45);
+	--parish-alert-warning: var(--mc-color-warning, #a26016);
+	--parish-alert-danger: var(--mc-color-danger, #a12b2f);
+	/* Shadows are intentionally neutral so brand hue never muddies elevation. */
 	position: fixed;
 	right: max(1rem, env(safe-area-inset-right));
 	bottom: max(1rem, env(safe-area-inset-bottom));
@@ -34,7 +43,7 @@
 	border-radius: 999px;
 	background: var(--parish-alert-accent);
 	box-shadow: 0 0.45rem 1.4rem rgb(0 0 0 / 25%);
-	color: #fff;
+	color: var(--parish-alert-on-accent);
 	font-weight: 700;
 }
 
@@ -48,8 +57,9 @@
 .parish-alerts__close:focus-visible,
 .parish-alerts a:focus-visible,
 .parish-alerts button:focus-visible {
-	outline: 3px solid #f0b429;
+	outline: 3px solid var(--parish-alert-focus);
 	outline-offset: 3px;
+	box-shadow: 0 0 0 1px var(--parish-alert-surface);
 }
 
 .parish-alerts__icon {
@@ -65,7 +75,7 @@
 	height: 1.65rem;
 	padding: 0 0.35rem;
 	border-radius: 999px;
-	background: #fff;
+	background: var(--parish-alert-on-accent);
 	color: var(--parish-alert-accent);
 	font-size: 0.82rem;
 	line-height: 1;
@@ -84,7 +94,7 @@
 	width: min(25rem, calc(100vw - 2rem));
 	max-height: min(36rem, calc(100vh - 6rem));
 	overflow-y: auto;
-	border: 1px solid rgb(0 0 0 / 12%);
+	border: 1px solid var(--parish-alert-border);
 	border-radius: 0.9rem;
 	background: var(--parish-alert-surface);
 	box-shadow: 0 0.75rem 2.5rem rgb(0 0 0 / 25%);
@@ -104,7 +114,7 @@
 	top: 0;
 	z-index: 1;
 	padding: 1rem 1rem 0.8rem;
-	border-bottom: 1px solid rgb(0 0 0 / 10%);
+	border-bottom: 1px solid var(--parish-alert-border);
 	background: var(--parish-alert-surface);
 }
 
@@ -131,7 +141,7 @@
 	padding: 0;
 	border: 0;
 	border-radius: 50%;
-	background: rgb(0 0 0 / 7%);
+	background: color-mix(in srgb, var(--parish-alert-text) 7%, transparent);
 	color: inherit;
 	font: inherit;
 	font-size: 1.4rem;
@@ -142,19 +152,19 @@
 .parish-alerts__item {
 	position: relative;
 	padding: 1rem;
-	border-left: 0.3rem solid #497592;
+	border-left: 0.3rem solid var(--parish-alert-info);
 }
 
 .parish-alerts__item + .parish-alerts__item {
-	border-top: 1px solid rgb(0 0 0 / 10%);
+	border-top: 1px solid var(--parish-alert-border);
 }
 
 .parish-alerts__item--important {
-	border-left-color: #c46a00;
+	border-left-color: var(--parish-alert-warning);
 }
 
 .parish-alerts__item--emergency {
-	border-left-color: #b42318;
+	border-left-color: var(--parish-alert-danger);
 }
 
 .parish-alerts__item.is-unread::after {
@@ -169,7 +179,7 @@
 }
 
 .parish-alerts__item.is-read {
-	background: rgb(0 0 0 / 2.5%);
+	background: color-mix(in srgb, var(--parish-alert-text) 2.5%, transparent);
 }
 
 .parish-alerts__level {
@@ -230,7 +240,7 @@
 	grid-template-columns: 1fr;
 	gap: 0.65rem;
 	padding: 0.85rem 1rem 1rem;
-	border-top: 1px solid rgb(0 0 0 / 10%);
+	border-top: 1px solid var(--parish-alert-border);
 	background: var(--parish-alert-surface);
 	text-align: center;
 }
@@ -240,7 +250,7 @@
 	border: 0;
 	border-radius: 999px;
 	background: var(--parish-alert-accent);
-	color: #fff;
+	color: var(--parish-alert-on-accent);
 	font-weight: 700;
 }
 
@@ -253,7 +263,7 @@
 	display: grid;
 	gap: 0.35rem;
 	padding-top: 0.65rem;
-	border-top: 1px solid rgb(0 0 0 / 10%);
+	border-top: 1px solid var(--parish-alert-border);
 }
 
 .parish-alerts__push-toggle {
@@ -292,7 +302,7 @@
 .parish-alerts-modal__backdrop {
 	position: absolute;
 	inset: 0;
-	background: rgb(24 20 18 / 70%);
+	background: color-mix(in srgb, var(--parish-alert-text) 70%, transparent);
 	backdrop-filter: blur(2px);
 }
 
@@ -310,7 +320,7 @@
 
 .parish-alerts-modal__header {
 	padding: 1.2rem 1.25rem 0.9rem;
-	border-bottom: 1px solid rgb(0 0 0 / 10%);
+	border-bottom: 1px solid var(--parish-alert-border);
 }
 
 .parish-alerts-modal__eyebrow {
@@ -335,7 +345,7 @@
 }
 
 .parish-alerts-modal__items {
-	border-top: 1px solid rgb(0 0 0 / 8%);
+	border-top: 1px solid var(--parish-alert-border);
 }
 
 .parish-alerts-modal__items .parish-alerts__item {
@@ -349,7 +359,7 @@
 	justify-content: flex-end;
 	gap: 0.75rem;
 	padding: 1rem 1.25rem;
-	border-top: 1px solid rgb(0 0 0 / 10%);
+	border-top: 1px solid var(--parish-alert-border);
 	background: var(--parish-alert-surface);
 }
 
@@ -363,11 +373,11 @@
 .parish-alerts-modal__primary {
 	border: 1px solid var(--parish-alert-accent);
 	background: var(--parish-alert-accent);
-	color: #fff;
+	color: var(--parish-alert-on-accent);
 }
 
 .parish-alerts-modal__secondary {
-	border: 1px solid rgb(0 0 0 / 22%);
+	border: 1px solid var(--parish-alert-border);
 	background: transparent;
 	color: var(--parish-alert-text);
 }
